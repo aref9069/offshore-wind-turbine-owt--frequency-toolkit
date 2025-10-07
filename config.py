@@ -24,6 +24,7 @@ Sections:
 - Output folders and water properties
 
 Author: Aref Aasi
+
 """
 
 from __future__ import annotations
@@ -31,86 +32,120 @@ import os
 import numpy as np
 
 
-def _get_float(prompt: str, default: float) -> float:
-    """Helper: ask for a float input with default fallback."""
-    txt = input(f"{prompt} [{default}]: ")
-    return float(txt) if txt.strip() else default
+# -------------------------------------------------------------------------
+# Helper functions for safe typed input
+# -------------------------------------------------------------------------
+def _get_float(prompt: str) -> float:
+    """Ask the user for a float value (required)."""
+    while True:
+        txt = input(f"{prompt}: ").strip()
+        try:
+            return float(txt)
+        except ValueError:
+            print("Please enter a valid numeric value.")
 
 
-def _get_int(prompt: str, default: int) -> int:
-    """Helper: ask for an integer input with default fallback."""
-    txt = input(f"{prompt} [{default}]: ")
-    return int(txt) if txt.strip() else default
+def _get_int(prompt: str) -> int:
+    """Ask the user for an integer value (required)."""
+    while True:
+        txt = input(f"{prompt}: ").strip()
+        try:
+            return int(txt)
+        except ValueError:
+            print("Please enter a valid integer value.")
 
 
-def _get_bool(prompt: str, default: bool) -> bool:
-    """Helper: ask for yes/no input with default fallback."""
-    txt = input(f"{prompt} [y/n, default={'y' if default else 'n'}]: ").strip().lower()
-    if not txt:
-        return default
-    return txt in ("y", "yes", "true", "1")
+def _get_bool(prompt: str) -> bool:
+    """Ask the user for a yes/no choice."""
+    while True:
+        txt = input(f"{prompt} [y/n]: ").strip().lower()
+        if txt in ("y", "yes"):
+            return True
+        elif txt in ("n", "no"):
+            return False
+        print("Please type 'y' or 'n'.")
 
 
-# ---------------- Geometry ----------------
+# -------------------------------------------------------------------------
+# Geometry
+# -------------------------------------------------------------------------
 print("\n--- Geometry Parameters ---")
-L   = _get_float("Total height of structure L (m)", 143.6)
-L1  = _get_float("Submerged length L1 (m)", 56.0)
+L   = _get_float("Total height of structure L (m)")
+L1  = _get_float("Submerged length L1 (m)")
 L2  = L - L1
 
-D1  = _get_float("Outer diameter of submerged part D1 (m)", 6.0)
-D2  = _get_float("Outer diameter of tower part D2 (m)", 3.87)
-t1  = _get_float("Wall thickness of submerged part t1 (m)", 0.060)
-t2  = _get_float("Wall thickness of tower part t2 (m)", 0.035)
+D1  = _get_float("Outer diameter of submerged part D1 (m)")
+D2  = _get_float("Outer diameter of tower part D2 (m)")
+t1  = _get_float("Wall thickness of submerged part t1 (m)")
+t2  = _get_float("Wall thickness of tower part t2 (m)")
 
-# ---------------- Material Properties ----------------
+# -------------------------------------------------------------------------
+# Material Properties
+# -------------------------------------------------------------------------
 print("\n--- Material Properties ---")
-E   = _get_float("Elastic modulus E (Pa)", 210e9)
-rho = _get_float("Steel density ρ (kg/m^3)", 8500.0)
-mA  = _get_float("Hydrodynamic added mass per length mA (kg/m)", 9837.2)
+E   = _get_float("Elastic modulus E (Pa)")
+rho = _get_float("Steel density ρ (kg/m^3)")
+mA  = _get_float("Hydrodynamic added mass per length mA (kg/m)")
 
-# ---------------- Lumped Masses ----------------
+# -------------------------------------------------------------------------
+# Lumped Masses
+# -------------------------------------------------------------------------
 print("\n--- Lumped Masses ---")
-M1  = _get_float("Waterline lumped mass M1 (kg)", 1.0e4)
-M2  = _get_float("Top mass (nacelle+rotor) M2 (kg)", 3.5e5)
+M1  = _get_float("Waterline lumped mass M1 (kg)")
+M2  = _get_float("Top mass (nacelle + rotor) M2 (kg)")
 g   = 9.80665  # constant
 P1  = (M1 + M2) * g
 P2  = M2 * g
 
-# ---------------- Base Springs ----------------
+# -------------------------------------------------------------------------
+# Base Springs
+# -------------------------------------------------------------------------
 print("\n--- Base Support Model ---")
-USE_BASE_SPRINGS = _get_bool("Use base springs instead of clamped base?", True)
-KL  = _get_float("Base translational spring stiffness KL (N/m)", 1e12)
-KR  = _get_float("Base rotational spring stiffness KR (N·m/rad)", 1e14)
+USE_BASE_SPRINGS = _get_bool("Use base springs instead of clamped base?")
+KL  = _get_float("Base translational spring stiffness KL (N/m)")
+KR  = _get_float("Base rotational spring stiffness KR (N·m/rad)")
 
-# ---------------- FEM Settings ----------------
+# -------------------------------------------------------------------------
+# FEM Settings
+# -------------------------------------------------------------------------
 print("\n--- FEM Mesh Settings ---")
-n1 = _get_int("Number of elements in submerged segment n1", 30)
-n2 = _get_int("Number of elements in tower segment n2", 50)
-USE_AXIAL_GEO = _get_bool("Include geometric stiffness (axial load)?", True)
+n1 = _get_int("Number of elements in submerged segment n1")
+n2 = _get_int("Number of elements in tower segment n2")
+USE_AXIAL_GEO = _get_bool("Include geometric stiffness (axial load)?")
 N_axial_1 = P1
 N_axial_2 = P2
 
-# ---------------- Analytical Frequency Search ----------------
+# -------------------------------------------------------------------------
+# Analytical Frequency Search
+# -------------------------------------------------------------------------
 print("\n--- Analytical Frequency Search Settings ---")
-NMODES_PRINT = _get_int("Number of modes to print", 6)
-SCAN_FMIN = _get_float("Frequency scan min (Hz)", 0.05)
-SCAN_FMAX = _get_float("Frequency scan max (Hz)", 5.0)
-NSCAN = _get_int("Number of scan points (resolution)", 2400)
+NMODES_PRINT = _get_int("Number of modes to print")
+SCAN_FMIN = _get_float("Frequency scan min (Hz)")
+SCAN_FMAX = _get_float("Frequency scan max (Hz)")
+NSCAN = _get_int("Number of scan points (resolution)")
 
-# ---------------- Output Paths ----------------
+# -------------------------------------------------------------------------
+# Output Paths
+# -------------------------------------------------------------------------
 FIG_DIR = "figs"
 RES_DIR = "results"
 os.makedirs(FIG_DIR, exist_ok=True)
 os.makedirs(RES_DIR, exist_ok=True)
 
-# ---------------- Water Properties ----------------
-RHO_WATER = _get_float("Water density ρ_water (kg/m^3)", 1025.0)
+# -------------------------------------------------------------------------
+# Water Properties
+# -------------------------------------------------------------------------
+print("\n--- Water Properties ---")
+RHO_WATER = _get_float("Water density ρ_water (kg/m^3)")
 CA_BASELINE = mA / (RHO_WATER * (np.pi * D1**2) / 4.0)
 
+# -------------------------------------------------------------------------
+# Summary
+# -------------------------------------------------------------------------
 print("\nConfiguration complete!")
-print(f"L = {L:.2f} m, L1 = {L1:.2f} m, D1 = {D1:.2f} m, D2 = {D2:.2f} m")
-print(f"E = {E:.2e} Pa, ρ = {rho:.1f} kg/m³, mA = {mA:.1f} kg/m")
-print(f"M1 = {M1:.1f} kg, M2 = {M2:.1f} kg")
-print(f"Base springs: KL={KL:.2e}, KR={KR:.2e}, use={USE_BASE_SPRINGS}")
-print(f"FEM mesh: n1={n1}, n2={n2}, geometric stiffness={USE_AXIAL_GEO}")
+print(f"Geometry: L = {L} m, L1 = {L1} m, D1 = {D1} m, D2 = {D2} m")
+print(f"Material: E = {E} Pa, ρ = {rho} kg/m³, mA = {mA} kg/m")
+print(f"Masses: M1 = {M1} kg, M2 = {M2} kg")
+print(f"Base springs: KL = {KL} N/m, KR = {KR} N·m/rad, enabled = {USE_BASE_SPRINGS}")
+print(f"FEM mesh: n1 = {n1}, n2 = {n2}, geometric stiffness = {USE_AXIAL_GEO}")
 print(f"Figures -> {FIG_DIR}/, Results -> {RES_DIR}/")
