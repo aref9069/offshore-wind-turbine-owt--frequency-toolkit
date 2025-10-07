@@ -51,8 +51,7 @@ Each parameter is entered interactively through the **config.py** module so lear
 If you use this repository in teaching or research, please cite:
 
 Aref Aasi (2025). OWT-Freq: Analytical vs FEM Natural Frequency Toolkit for Offshore Wind Turbine Structures. GitHub Repository.
-https://github.com/
-aref9069/offshore-wind-turbine-owt--frequency-toolkit
+https://github.com/aref9069/offshore-wind-turbine-owt--frequency-toolkit
 
 
 ## License
