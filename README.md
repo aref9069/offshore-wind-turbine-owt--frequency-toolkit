@@ -52,7 +52,7 @@ If you use this repository in teaching or research, please cite:
 
 Aref Aasi (2025). OWT-Freq: Analytical vs FEM Natural Frequency Toolkit for Offshore Wind Turbine Structures. GitHub Repository.
 https://github.com/
-<your-username>/owt-freq-analytical-vs-fem
+<your-username>/offshore-wind-turbine-owt--frequency-toolkit
 
 
 ## License
