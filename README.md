@@ -31,16 +31,32 @@ Each parameter is entered interactively through the **config.py** module so lear
 - Visualize mesh convergence and mode-shape differences.
 
 ---
-## Repository Structure
+| File               | Description                                                             |
+| ------------------ | ----------------------------------------------------------------------- |
+| `config.py`        | Interactive configuration (geometry, materials, loads, springs, search) |
+| `utils.py`         | Helper utilities (save figures, compute A/I, override depth/mass)       |
+| `analytical.py`    | Determinant-based analytical solver for two-segment EB beam             |
+| `fem.py`           | FEM assembly and eigen-solver for two-segment EB beam                   |
+| `run_cases.py`     | Example runner (clamped & spring base) producing CSV and figures        |
+| `README.md`        | Documentation                                                           |
+| `LICENSE`          | Open-source license (MIT recommended)                                   |
 
-owt-freq-analytical-vs-fem/
-├── owt_freq/
-│ ├── config.py # User inputs: geometry, material, stiffness, mesh, etc. (interactive)
-│ ├── utils.py # Shared helpers for saving plots, computing A/I, temporary overrides
-│ ├── analytical.py # Analytical 8×8 determinant-based EB model
-│ ├── fem.py # 2-node EB finite element model with geometric stiffness
-│ └── run_cases.py # Example CLI script that runs clamped/spring-base comparisons
-│
-├── results/ # Auto-created; stores CSV frequency tables
-├── figs/ # Auto-created; stores PNG and PDF figures
-└── README.md # This file
+
+
+
+
+
+## Citation
+
+If you use this repository in teaching or research, please cite:
+
+Aref Aasi (2025). OWT-Freq: Analytical vs FEM Natural Frequency Toolkit for Offshore Wind Turbine Structures. GitHub Repository.
+https://github.com/
+<your-username>/owt-freq-analytical-vs-fem
+
+
+## License
+
+This project is released under the MIT License — free for research, teaching, and engineering use.
+See LICENSE
+ for details.
