@@ -1,4 +1,4 @@
-## offshore-wind-turbine-owt-frequency-toolkit
+## Offshore-wind-turbine-owt-frequency-toolkit
 OWT Frequency Toolkit provides parallel analytical and finite-element solutions for the natural frequencies of a two-segment offshore wind turbine monopile–tower system. The analytical path solves an 8×8 characteristic matrix (EB with axial load), while the numerical path assembles a 2-node EB FEM with geometric stiffness, lumped masses, hydrodynamic added mass, and optional coupled base springs. The package outputs CSV comparison tables, publication-quality figures (PNG+PDF), mesh-convergence plots, added-mass/base-spring sensitivity studies, and mode-shape overlays to validate and tune models for research and engineering use.
 
 # OWT-Freq: Analytical vs FEM Natural Frequencies Toolkit
